@@ -1,0 +1,79 @@
+/* Main container styling */
+.dashboard-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Aligns the form to the top */
+  min-height: 100vh;
+  padding-top: 50px; /* Adds spacing from the top */
+  background-color: #f5f5f5;
+}
+
+/* Form container styling */
+.form-container {
+  width: 100%;
+  max-width: 1000px;
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Form title styling */
+.form-title {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Form grid layout */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* Form group styling */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Full-width styling for the submit button */
+.full-width {
+  grid-column: span 3;
+}
+
+/* Label styling */
+.form-label {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+}
+
+/* Input and select styling */
+.form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Submit button styling */
+.form-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #38bdf8;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.form-button:hover {
+  background-color: #0ea5e9;
+}
