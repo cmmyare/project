@@ -40,7 +40,7 @@ const Pagination = ({ currentPage, numberOfPages, prevPage, nextPage, changeCPag
   // ✅ Get Pagination Numbers with "..."
   const getPaginationNumbers = () => {
     const pages = [];
-    if (numberOfPages <= 5) {
+    if (numberOfPages < 5) {
       return Array.from({ length: numberOfPages }, (_, i) => i + 1);
     }
 

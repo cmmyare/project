@@ -21,7 +21,6 @@ import Login from "../views/authentication/Login";
 import Landing from "../views/authentication/Landing";
 
 /* actions */
-import { action as dashboardAction } from "../views/dashboard/Dashboard";
 import { Loader as fullLoader } from "../layouts/full/FullLayout";
 
 const router = createBrowserRouter([
@@ -42,7 +41,6 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <Dashboard />,
-            action: dashboardAction,
           }, // ✅ Dashboard loads properly now
           { path: "sample-page", element: <SamplePage /> },
           { path: "icons", element: <Icons /> },

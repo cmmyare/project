@@ -26,13 +26,20 @@ const TypographyPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshData, setRefreshData] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   // ✅ Pagination data
   const [currentPage, setCurrentPage] = useState(1);
-  const recordPerPage = 3;
+  const recordPerPage = 5;
   const indexOfLastRecord = currentPage * recordPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordPerPage;
-  const records = data?.slice(indexOfFirstRecord, indexOfLastRecord) || [];
-  const numberOfPages = Math.max(1, Math.ceil((data?.length || 0) / recordPerPage));
+  const filteredData = data.filter((item) =>
+    Object.values(item)
+      .join(" ")
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+  );
+  const records = filteredData?.slice(indexOfFirstRecord, indexOfLastRecord) || [];
+  const numberOfPages = Math.max(1, Math.ceil((filteredData?.length || 0) / recordPerPage));
   // ✅ Page Change Function
   const changeCPage = (page) => {
     if (page >= 1 && page <= numberOfPages) {
@@ -197,9 +204,20 @@ const TypographyPage = () => {
   return (
     <>
    <PageContainer title="Typography" description="This is Typography">
-      <Button variant="contained" color="primary" onClick={handleOpenAddForm}>
-        Add New
-      </Button>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 2 }}>
+        <TextField
+          label="Search"
+          variant="outlined"
+          size="small"
+          fullWidth
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search in all fields..."
+        />
+        <Button variant="contained" color="primary" onClick={handleOpenAddForm} sx={{ alignSelf: 'flex-start' }}>
+          Add New
+        </Button>
+      </Box>
 
       <TableContainer component={Paper} style={{ marginTop: "16px" }}>
         <Table>

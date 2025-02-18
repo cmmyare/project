@@ -1,9 +1,10 @@
 import express from "express";
-import {getCurrentUser} from "../controllers/userController.js"
+import {getCurrentUser, getAllUsers} from "../controllers/userController.js"
 import {authenticateUser} from "../middileware/authMiddleware.js";
 const router = express.Router();
 
 router.get("/current-user",authenticateUser, getCurrentUser); 
+router.get("/all-users",authenticateUser, getAllUsers); 
 
 
 
