@@ -16,11 +16,15 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
+  Tooltip
 } from "@mui/material";
 import PageContainer from "src/components/container/PageContainer";
 import customFetch from "../utilities/customFetch"; // API handler
 import { toast } from "react-toastify";
 import Pagination from "../utilities/Pagination";
+import { IconArrowUp, IconArrowDown } from "@tabler/icons-react";
+
 const TypographyPage = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,16 +34,57 @@ const TypographyPage = () => {
   // ✅ Pagination data
   const [currentPage, setCurrentPage] = useState(1);
   const recordPerPage = 5;
-  const indexOfLastRecord = currentPage * recordPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordPerPage;
-  const filteredData = data.filter((item) =>
+  const [sortConfig, setSortConfig] = useState({
+    key: 'createdAt',
+    direction: 'desc'
+  });
+
+  // Sort function
+  const sortData = (dataToSort, key, direction) => {
+    return [...dataToSort].sort((a, b) => {
+      if (key === 'createdAt') {
+        return direction === 'asc' 
+          ? new Date(a[key]) - new Date(b[key])
+          : new Date(b[key]) - new Date(a[key]);
+      }
+      if (!a[key]) return 1;
+      if (!b[key]) return -1;
+      return direction === 'asc'
+        ? a[key].localeCompare(b[key])
+        : b[key].localeCompare(a[key]);
+    });
+  };
+
+  // Handle sort
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  // Get sorted and paginated data
+  const sortedData = sortData(data, sortConfig.key, sortConfig.direction);
+  
+  // Filter data based on search query
+  const filteredData = sortedData.filter((item) =>
     Object.values(item)
       .join(" ")
       .toLowerCase()
       .includes(searchQuery.toLowerCase())
   );
-  const records = filteredData?.slice(indexOfFirstRecord, indexOfLastRecord) || [];
-  const numberOfPages = Math.max(1, Math.ceil((filteredData?.length || 0) / recordPerPage));
+
+  const indexOfLastRecord = currentPage * recordPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordPerPage;
+  const records = filteredData.slice(indexOfFirstRecord, indexOfLastRecord);
+  const numberOfPages = Math.max(1, Math.ceil(filteredData.length / recordPerPage));
+
+  // Reset to first page when searching
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
   // ✅ Page Change Function
   const changeCPage = (page) => {
     if (page >= 1 && page <= numberOfPages) {
@@ -223,10 +268,29 @@ const TypographyPage = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }} onClick={() => handleSort('name')}>
+                  Name
+                  {sortConfig.key === 'name' && (
+                    <IconButton size="small">
+                      {sortConfig.direction === 'asc' ? <IconArrowUp size={16} /> : <IconArrowDown size={16} />}
+                    </IconButton>
+                  )}
+                </Box>
+              </TableCell>
               <TableCell>Age</TableCell>
               <TableCell>Phone</TableCell>
               <TableCell>Email</TableCell>
+              <TableCell>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }} onClick={() => handleSort('createdAt')}>
+                  Created At
+                  {sortConfig.key === 'createdAt' && (
+                    <IconButton size="small">
+                      {sortConfig.direction === 'asc' ? <IconArrowUp size={16} /> : <IconArrowDown size={16} />}
+                    </IconButton>
+                  )}
+                </Box>
+              </TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -237,6 +301,7 @@ const TypographyPage = () => {
                 <TableCell>{row.age}</TableCell>
                 <TableCell>{row.phone}</TableCell>
                 <TableCell>{row.email}</TableCell>
+                <TableCell>{new Date(row.createdAt).toLocaleDateString()}</TableCell>
                 <TableCell>
                   <Button variant="contained" color="primary" onClick={() => handleOpenUpdateForm(row)}>
                     Update
